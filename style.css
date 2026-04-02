@@ -1,51 +1,72 @@
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: Arial;
+  scroll-behavior: smooth;
+}
+
+/* HERO */
+.hero {
   background: linear-gradient(135deg, #667eea, #764ba2);
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.card {
-  background: white;
-  padding: 30px;
-  border-radius: 20px;
+  color: white;
   text-align: center;
-  width: 300px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  padding: 100px 20px;
+  animation: fadeIn 1s ease;
 }
 
-.profile {
-  width: 120px;
-  border-radius: 50%;
-}
-
-.job {
-  color: gray;
-  margin-top: -10px;
-}
-
-.bio {
-  font-size: 14px;
-  margin: 15px 0;
-}
-
-.btn-group {
-  margin-top: 20px;
+.hero h1 {
+  font-size: 40px;
 }
 
 .btn {
   display: inline-block;
-  padding: 10px 15px;
-  background: #667eea;
-  color: white;
-  text-decoration: none;
+  margin-top: 20px;
+  padding: 12px 20px;
+  background: white;
+  color: #333;
   border-radius: 8px;
-  margin: 5px;
+  text-decoration: none;
+  transition: 0.3s;
 }
 
-.btn.secondary {
-  background: #764ba2;
+.btn:hover {
+  background: #ddd;
+  transform: scale(1.05);
+}
+
+/* SECTION */
+section {
+  padding: 60px 20px;
+  text-align: center;
+}
+
+/* CARD */
+.card {
+  background: #f4f4f4;
+  margin: 15px auto;
+  padding: 20px;
+  border-radius: 10px;
+  width: 250px;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+}
+
+/* CTA */
+.cta {
+  background: #333;
+  color: white;
+}
+
+/* ANIMASI */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
