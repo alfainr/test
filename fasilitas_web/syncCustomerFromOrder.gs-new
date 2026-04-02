@@ -1,0 +1,82 @@
+function updateCustomerSummary() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const orderSheet = ss.getSheetByName("ORDER");     // Ganti jika nama berbeda
+  const customerSheet = ss.getSheetByName("CUSTOMER"); // Ganti jika nama berbeda
+
+  const orderLastRow = orderSheet.getLastRow();
+  const orderLastCol = orderSheet.getLastColumn();
+  const customerLastRow = customerSheet.getLastRow();
+
+  if (orderLastRow < 2 || customerLastRow < 2) return;
+
+  const orderData = orderSheet
+    .getRange(2, 1, orderLastRow - 1, orderLastCol)
+    .getValues();
+
+  const customerData = customerSheet
+    .getRange(2, 1, customerLastRow - 1, 1)
+    .getValues();
+
+  const orderMap = {};
+
+  orderData.forEach(row => {
+    const customerId = row[1];   // Kolom ID Customer di ORDER
+    const orderDate = new Date(row[2]); // Kolom Tanggal Order
+    const orderAmount = row[3];  // Kolom Amount
+
+    if (!orderMap[customerId]) {
+      orderMap[customerId] = {
+        totalOrder: 0,
+        totalAmount: 0,
+        firstOrder: orderDate,
+        lastOrder: orderDate
+      };
+    }
+
+    orderMap[customerId].totalOrder += 1;
+    orderMap[customerId].totalAmount += orderAmount;
+
+    if (orderDate < orderMap[customerId].firstOrder) {
+      orderMap[customerId].firstOrder = orderDate;
+    }
+
+    if (orderDate > orderMap[customerId].lastOrder) {
+      orderMap[customerId].lastOrder = orderDate;
+    }
+  });
+
+  const output = [];
+
+  customerData.forEach(row => {
+    const customerId = row[0];
+    const data = orderMap[customerId];
+
+    if (data) {
+      output.push([
+        data.totalOrder,
+        data.totalAmount,
+        data.firstOrder,
+        data.lastOrder
+      ]);
+    } else {
+      output.push([0, 0, "", ""]);
+    }
+  });
+
+  customerSheet
+    .getRange(2, 2, output.length, 4)
+    .setValues(output);
+}
+
+/* ===========================
+   FUNCTION BUAT TRIGGER 02:00
+   Jalankan 1x saja manual
+=========================== */
+
+function createDailyTrigger() {
+  ScriptApp.newTrigger("updateCustomerSummary")
+    .timeBased()
+    .everyDays(1)
+    .atHour(2) // Jam 02.00
+    .create();
+}
